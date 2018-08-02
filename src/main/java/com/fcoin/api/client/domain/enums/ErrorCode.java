@@ -22,9 +22,9 @@ public enum ErrorCode {
     InternalServerError(500, "服务内部错误，请稍后再进行尝试"),
     ServiceUnavailable(503, "服务不可用，请稍后再进行尝试");
     private int code;
-    private String desc;
+    private String message;
 
-    public ErrorCode fromCode(int code) {
+    public static ErrorCode fromCode(int code) {
         return Arrays.stream(ErrorCode.values())
                 .filter(f -> f.getCode() == code)
                 .findFirst()

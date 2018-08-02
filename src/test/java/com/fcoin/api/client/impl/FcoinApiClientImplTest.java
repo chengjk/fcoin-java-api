@@ -79,10 +79,6 @@ public class FcoinApiClientImplTest {
         assert candles != null;
     }
 
-
-
-
-
     @Test
     public void balance() {
         Set<Asset> balance = client.balance();
@@ -90,7 +86,7 @@ public class FcoinApiClientImplTest {
     }
     @Test
     public void place() {
-        String id = client.place("BTCUSDT",OrderSide.buy,OrderType.buy,BigDecimal.ZERO,BigDecimal.ZERO);
+        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,BigDecimal.ONE,BigDecimal.ONE);
         assert id != null;
     }
     @Test

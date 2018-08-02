@@ -1,6 +1,7 @@
 package com.fcoin.api.client;
 
 import com.fcoin.api.client.constant.Consts;
+import com.fcoin.api.client.domain.enums.ErrorCode;
 import com.fcoin.api.client.domain.resp.RespBody;
 import com.fcoin.api.client.exception.ApiException;
 import com.fcoin.api.client.security.AuthenticationInterceptor;
@@ -78,7 +79,18 @@ public class FcoinApiServiceGenerator {
      * Extracts and converts the response error body into an object.
      */
     public static ApiException parseError(Response<?> response) throws ApiException {
-        throw new ApiException(response.raw().code(), response.raw().message());
+        ErrorCode errorCode = null;
+        try {
+            errorCode = ErrorCode.fromCode(response.raw().code());
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
+        }
+
+        if (errorCode != null) {
+            throw new ApiException(errorCode);
+        }else {
+            throw new ApiException(response.raw().code(), response.raw().message());
+        }
     }
 
 

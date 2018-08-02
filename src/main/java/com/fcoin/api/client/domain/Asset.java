@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Asset {
+    private String category;
     private String currency;
     private BigDecimal balance;
     private BigDecimal available;

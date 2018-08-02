@@ -42,14 +42,11 @@ public class AuthenticationInterceptor implements Interceptor {
 
         //add heads if required
         if (isSignatureRequired) {
+            newRequestBuilder.removeHeader(Consts.ENDPOINT_SECURITY_TYPE_SIGNED);
             String signature = createSignature(original.method(), original.url(), now);
             newRequestBuilder.addHeader("FC-ACCESS-KEY", apiKey);
             newRequestBuilder.addHeader("FC-ACCESS-TIMESTAMP", now.toString());
             newRequestBuilder.addHeader("FC-ACCESS-SIGNATURE", signature);
-            //add headers
-
-
-
         }
         // Build new request after adding the necessary authentication information
         Request newRequest = newRequestBuilder.build();
