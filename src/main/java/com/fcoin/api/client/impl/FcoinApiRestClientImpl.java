@@ -70,12 +70,12 @@ public class FcoinApiRestClientImpl implements FcoinApiRestClient {
 
     @Override
     public String place(String symbol, OrderSide side, OrderType type, BigDecimal price, BigDecimal amount) {
-        return executeSync(service.place(symbol, side.name(), type.name(), price.stripTrailingZeros().toPlainString(), amount.stripTrailingZeros().toPlainString())).getData();
+        return executeSync(service.place(symbol, side.name(), type.name(), price.toPlainString(), amount.toPlainString())).getData();
     }
 
     @Override
     public Set<Order> orders(String symbol, OrderState state, String before, String after, Integer limit) {
-        return executeSync(service.orders(symbol, state.name(), before, after, limit.toString())).getData();
+        return executeSync(service.orders(symbol.toLowerCase(), state.getCode(), before, after, limit==null?null:limit.toString())).getData();
     }
 
     @Override

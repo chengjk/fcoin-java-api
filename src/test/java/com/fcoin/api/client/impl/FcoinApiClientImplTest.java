@@ -86,12 +86,12 @@ public class FcoinApiClientImplTest {
     }
     @Test
     public void place() {
-        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,BigDecimal.ONE,BigDecimal.ONE);
+        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,new BigDecimal("1.0"),new BigDecimal("1.0"));
         assert id != null;
     }
     @Test
     public void orders() {
-        Set<Order> orders = client.orders("BTCUSDT", OrderState.SUBMITTED, null, null, null);
+        Set<Order> orders = client.orders("btcusdt", OrderState.SUBMITTED, null,null, 2);
         assert orders != null;
     }
     @Test

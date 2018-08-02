@@ -56,17 +56,17 @@ public interface FcoinApiService {
 
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @GET("v2/orders/{order_id}")
-    Call<RespBody<Order>> get(@Query("order_id") String orderId);
+    Call<RespBody<Order>> get(@Path("order_id") String orderId);
 
 
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @POST("v2/orders/{order_id}/submit-cancel")
-    Call<RespBody<Boolean>> cancel(@Query("order_id") String orderId);
+    Call<RespBody<Boolean>> cancel(@Path("order_id") String orderId);
 
 
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @GET("v2/orders/{order_id}/match-results")
-    Call<RespBody<Set<MatchResult>>> matchResult(@Query("order_id") String orderId);
+    Call<RespBody<Set<MatchResult>>> matchResult(@Path("order_id") String orderId);
 
 
 }

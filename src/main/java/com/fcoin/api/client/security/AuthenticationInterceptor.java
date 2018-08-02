@@ -5,10 +5,12 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.TreeSet;
@@ -67,8 +69,7 @@ public class AuthenticationInterceptor implements Interceptor {
         StringBuilder sb = new StringBuilder(1024);
         sb.append(method.toUpperCase()) // GET
                 .append(Consts.API_URL.toLowerCase()) // Host
-                .append(request.uri().getPath()) //path
-                .append(ts.toString()); //timestamp
+                .append(request.uri().getPath()); //path
 
         StringJoiner joiner = new StringJoiner("&");
         //参数排序
@@ -78,8 +79,16 @@ public class AuthenticationInterceptor implements Interceptor {
             String value = request.queryParameter(key);
             joiner.add(key + '=' + urlEncode(value));
         }
+        if (method.equalsIgnoreCase("GET")) {
+            if (!StringUtils.isEmpty(joiner.toString())) {
+                sb.append("?");
+            }
+            sb.append(joiner.toString()).append(ts.toString());
+        } else if (method.equalsIgnoreCase("POST")) {
+            sb.append(ts.toString()).append(joiner.toString());
+        }
 
-        return HmacSHA1Signer.sign(sb.toString() + joiner.toString(), secret);
+        return HmacSHA1Signer.sign(sb.toString(), secret);
     }
 
 
