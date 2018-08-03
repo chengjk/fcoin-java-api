@@ -2,6 +2,7 @@ package com.fcoin.api.client;
 
 import com.fcoin.api.client.constant.Consts;
 import com.fcoin.api.client.domain.*;
+import com.fcoin.api.client.domain.reqs.PlaceOrderRequest;
 import com.fcoin.api.client.domain.resp.RespBody;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -41,11 +42,16 @@ public interface FcoinApiService {
     Call<RespBody<Set<Asset>>> balance();
 
 
+//    @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
+//    @POST("v2/orders")
+//    Call<RespBody<String>> place(@Field("symbol") String symbol, @Field("side") String side,
+//                                 @Field("type") String type, @Field("price") String price,
+//                                 @Field("amount") String amount);
+
+
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @POST("v2/orders")
-    Call<RespBody<String>> place(@Query("symbol") String symbol, @Query("side") String side,
-                                 @Query("type") String type, @Query("price") String price,
-                                 @Query("amount") String amount);
+    Call<RespBody<String>> place(@Body PlaceOrderRequest request);
 
 
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)

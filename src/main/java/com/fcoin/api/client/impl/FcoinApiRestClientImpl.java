@@ -4,6 +4,7 @@ import com.fcoin.api.client.FcoinApiRestClient;
 import com.fcoin.api.client.FcoinApiService;
 import com.fcoin.api.client.domain.*;
 import com.fcoin.api.client.domain.enums.*;
+import com.fcoin.api.client.domain.reqs.PlaceOrderRequest;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -70,7 +71,14 @@ public class FcoinApiRestClientImpl implements FcoinApiRestClient {
 
     @Override
     public String place(String symbol, OrderSide side, OrderType type, BigDecimal price, BigDecimal amount) {
-        return executeSync(service.place(symbol, side.name(), type.name(), price.toPlainString(), amount.toPlainString())).getData();
+        PlaceOrderRequest req = new PlaceOrderRequest();
+        req.setSymbol(symbol);
+        req.setSide(side.name());
+        req.setType(type.name());
+        req.setPrice(price.stripTrailingZeros().toPlainString());
+        req.setAmount(amount.stripTrailingZeros().toPlainString());
+//        return executeSync(service.place(symbol, side.name(), type.name(), price.toPlainString(), amount.toPlainString())).getData();
+        return executeSync(service.place(req)).getData();
     }
 
     @Override

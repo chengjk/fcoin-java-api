@@ -1,19 +1,16 @@
 package com.fcoin.api.client.security;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fcoin.api.client.constant.Consts;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
+import okio.Buffer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.StringJoiner;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A request interceptor that injects the API Key into requests, and signs messages, whenever required.
@@ -45,7 +42,7 @@ public class AuthenticationInterceptor implements Interceptor {
         //add heads if required
         if (isSignatureRequired) {
             newRequestBuilder.removeHeader(Consts.ENDPOINT_SECURITY_TYPE_SIGNED);
-            String signature = createSignature(original.method(), original.url(), now);
+            String signature = createSignature(original, now);
             newRequestBuilder.addHeader("FC-ACCESS-KEY", apiKey);
             newRequestBuilder.addHeader("FC-ACCESS-TIMESTAMP", now.toString());
             newRequestBuilder.addHeader("FC-ACCESS-SIGNATURE", signature);
@@ -60,35 +57,95 @@ public class AuthenticationInterceptor implements Interceptor {
      * 创建签名.
      * https://developer.fcoin.com/zh.html?python#api
      *
-     * @param method
      * @param request
      * @param ts
      * @return
      */
-    private String createSignature(String method, HttpUrl request, Long ts) {
+    private String createSignature(Request request, Long ts) {
         StringBuilder sb = new StringBuilder(1024);
-        sb.append(method.toUpperCase()) // GET
+        String method = request.method().toUpperCase();
+        sb.append(method) // GET
                 .append(Consts.API_URL.toLowerCase()) // Host
-                .append(request.uri().getPath()); //path
+                .append(request.url().uri().getPath()); //path
 
         StringJoiner joiner = new StringJoiner("&");
-        //参数排序
-        TreeSet<String> names = new TreeSet(request.queryParameterNames());
-        //拼接
-        for (String key : names) {
-            String value = request.queryParameter(key);
-            joiner.add(key + '=' + urlEncode(value));
-        }
         if (method.equalsIgnoreCase("GET")) {
-            if (!StringUtils.isEmpty(joiner.toString())) {
-                sb.append("?");
-            }
-            sb.append(joiner.toString()).append(ts.toString());
+            buildForGet(request, ts, sb, joiner);
+
         } else if (method.equalsIgnoreCase("POST")) {
-            sb.append(ts.toString()).append(joiner.toString());
+            if (request.body() instanceof FormBody) {
+                buildForPostFormBody(request, ts, sb, joiner);
+            }
+            if (request.body() instanceof RequestBody) {
+                buildForPostRequestBody(request, ts, sb, joiner);
+            }
         }
 
         return HmacSHA1Signer.sign(sb.toString(), secret);
+    }
+
+    private void buildForPostRequestBody(Request request, Long ts, StringBuilder sb, StringJoiner joiner) {
+        String bodyStr = bodyToString(request.body());
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<TreeMap<String, Object>> typeRef = new TypeReference<TreeMap<String, Object>>() {
+        };
+        try {
+            //排序
+            TreeMap<String, Object> params = mapper.readValue(bodyStr, typeRef);
+            //拼接
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                joiner.add(entry.getKey() + '=' + entry.getValue());
+            }
+            sb.append(ts.toString()).append(joiner.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildForPostFormBody(Request request, Long ts, StringBuilder sb, StringJoiner joiner) {
+        FormBody body = (FormBody) request.body();
+        TreeMap<String, Object> bodyParm = new TreeMap<>();
+        //排序
+        for (int i = 0; i < body.size(); i++) {
+            bodyParm.put(body.encodedName(i), body.encodedValue(i));
+        }
+        //拼接
+        for (Map.Entry<String, Object> entry : bodyParm.entrySet()) {
+            joiner.add(entry.getKey() + '=' + entry.getValue());
+        }
+        sb.append(ts.toString()).append(joiner.toString());
+    }
+
+    private void buildForGet(Request request, Long ts, StringBuilder sb, StringJoiner joiner) {
+        //参数排序
+        TreeSet<String> names = new TreeSet(request.url().queryParameterNames());
+        //拼接
+        for (String key : names) {
+            String value = request.url().queryParameter(key);
+            joiner.add(key + '=' + urlEncode(value));
+        }
+        //追加问号
+        if (!StringUtils.isEmpty(joiner.toString())) {
+            sb.append("?");
+        }
+        sb.append(joiner.toString()).append(ts.toString());
+    }
+
+
+    private String bodyToString(final RequestBody body) {
+        try {
+            final RequestBody copy = body;
+            final Buffer buffer = new Buffer();
+            if (copy != null) {
+                copy.writeTo(buffer);
+            } else {
+                return "";
+            }
+            return buffer.readUtf8();
+
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 

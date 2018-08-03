@@ -86,7 +86,7 @@ public class FcoinApiClientImplTest {
     }
     @Test
     public void place() {
-        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,new BigDecimal("1.0"),new BigDecimal("1.0"));
+        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,new BigDecimal("1"),new BigDecimal("1"));
         assert id != null;
     }
     @Test
