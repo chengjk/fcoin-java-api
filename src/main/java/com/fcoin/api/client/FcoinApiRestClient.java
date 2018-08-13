@@ -2,11 +2,6 @@ package com.fcoin.api.client;
 
 import com.fcoin.api.client.domain.*;
 import com.fcoin.api.client.domain.enums.*;
-import com.fcoin.api.client.domain.resp.RespBody;
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 import java.math.BigDecimal;
 import java.util.Set;

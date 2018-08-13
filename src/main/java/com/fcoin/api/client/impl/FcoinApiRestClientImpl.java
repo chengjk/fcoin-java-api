@@ -83,7 +83,7 @@ public class FcoinApiRestClientImpl implements FcoinApiRestClient {
 
     @Override
     public Set<Order> orders(String symbol, OrderState state, String before, String after, Integer limit) {
-        return executeSync(service.orders(symbol.toLowerCase(), state.getCode(), before, after, limit==null?null:limit.toString())).getData();
+        return executeSync(service.orders(symbol.toLowerCase(), state==null?null:state.getCode(), before, after, limit==null?null:limit.toString())).getData();
     }
 
     @Override

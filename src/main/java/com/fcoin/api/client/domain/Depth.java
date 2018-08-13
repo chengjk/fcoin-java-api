@@ -15,6 +15,7 @@ public class Depth {
     private String type;
     private String seq;
     private long ts;
+    //[price,vol,price1,vol1]
     private List<BigDecimal> bids;
     private List<BigDecimal> asks;
 }

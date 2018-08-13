@@ -41,14 +41,6 @@ public interface FcoinApiService {
     @GET("v2/accounts/balance")
     Call<RespBody<Set<Asset>>> balance();
 
-
-//    @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
-//    @POST("v2/orders")
-//    Call<RespBody<String>> place(@Field("symbol") String symbol, @Field("side") String side,
-//                                 @Field("type") String type, @Field("price") String price,
-//                                 @Field("amount") String amount);
-
-
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @POST("v2/orders")
     Call<RespBody<String>> place(@Body PlaceOrderRequest request);
@@ -56,7 +48,7 @@ public interface FcoinApiService {
 
     @Headers(Consts.ENDPOINT_SECURITY_TYPE_SIGNED_HEADER)
     @GET("v2/orders")
-    Call<RespBody<Set<Order>>> orders(@Query("symbol") String symbol, @Query("state") String state,
+    Call<RespBody<Set<Order>>> orders(@Query("symbol") String symbol, @Query("states") String state,
                                       @Query("before") String before, @Query("after") String after,
                                       @Query("limit") String limit);
 
