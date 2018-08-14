@@ -75,8 +75,7 @@ public class AuthenticationInterceptor implements Interceptor {
         } else if (method.equalsIgnoreCase("POST")) {
             if (request.body() instanceof FormBody) {
                 buildForPostFormBody(request, ts, sb, joiner);
-            }
-            if (request.body() instanceof RequestBody) {
+            } else if (request.body() instanceof RequestBody) {
                 buildForPostRequestBody(request, ts, sb, joiner);
             }
         }
