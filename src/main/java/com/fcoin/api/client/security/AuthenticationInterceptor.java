@@ -89,6 +89,7 @@ public class AuthenticationInterceptor implements Interceptor {
         TypeReference<TreeMap<String, Object>> typeRef = new TypeReference<TreeMap<String, Object>>() {
         };
         try {
+            sb.append(ts.toString());
             if (StringUtils.isNotBlank(bodyStr)) {
                 //排序
                 TreeMap<String, Object> params = mapper.readValue(bodyStr, typeRef);
@@ -96,7 +97,7 @@ public class AuthenticationInterceptor implements Interceptor {
                 for (Map.Entry<String, Object> entry : params.entrySet()) {
                     joiner.add(entry.getKey() + '=' + entry.getValue());
                 }
-                sb.append(ts.toString()).append(joiner.toString());
+                sb.append(joiner.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
