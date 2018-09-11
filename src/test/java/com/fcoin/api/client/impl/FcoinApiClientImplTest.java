@@ -82,11 +82,12 @@ public class FcoinApiClientImplTest {
     @Test
     public void balance() {
         Set<Asset> balance = client.balance();
-        assert balance != null;
+        Asset usdt = balance.stream().filter(f -> f.getCurrency().equalsIgnoreCase("usdt")).findFirst().get();
+        assert usdt != null;
     }
     @Test
     public void place() {
-        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,new BigDecimal("1"),new BigDecimal("1"));
+        String id = client.place("btcusdt",OrderSide.buy,OrderType.limit,new BigDecimal("6310"),new BigDecimal("0.001"));
         assert id != null;
     }
     @Test
@@ -96,17 +97,17 @@ public class FcoinApiClientImplTest {
     }
     @Test
     public void get() {
-        Order order = client.get("aaa");
+        Order order = client.get("dWGb6jo4sBduhRZzGu_Jl7CZ-ZfadCztdNU7p2opAQg=");
         assert order != null;
     }
     @Test
     public void cancel() {
-        Boolean result = client.cancel("aaa");
+        Boolean result = client.cancel("dWGb6jo4sBduhRZzGu_Jl7CZ-ZfadCztdNU7p2opAQg=");
         assert result != null;
     }
     @Test
     public void matchResult() {
-        Set<MatchResult> results = client.matchResult("aaaa");
+        Set<MatchResult> results = client.matchResult("dWGb6jo4sBduhRZzGu_Jl7CZ-ZfadCztdNU7p2opAQg=");
         assert results != null;
     }
 

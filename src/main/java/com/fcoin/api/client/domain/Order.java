@@ -27,11 +27,15 @@ public class Order {
     private BigDecimal executedValue;
     @JsonProperty(value = "filled_amount")
     private BigDecimal filledAmount;
-    @JsonProperty(value = "filled_fees")
-    private String filledFees;
+    @JsonProperty(value = "fill_fees")
+    private String fillFees;
     @JsonProperty(value = "created_at")
     private Long createdAt;
     private OrderSource source;
+
+
+
+    private String exchange;
 
 
 

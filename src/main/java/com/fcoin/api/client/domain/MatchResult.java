@@ -1,7 +1,9 @@
 package com.fcoin.api.client.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fcoin.api.client.domain.enums.MatchResultType;
 import com.fcoin.api.client.domain.enums.OrderSide;
+import com.fcoin.api.client.domain.enums.OrderSource;
 import com.fcoin.api.client.domain.enums.OrderType;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,12 +17,13 @@ import java.math.BigDecimal;
 @Setter
 public class MatchResult {
     private BigDecimal price;
-    @JsonProperty("filled_fees")
-    private BigDecimal filledFees;
+    @JsonProperty("fill_fees")
+    private BigDecimal fillFees;
     @JsonProperty("filled_amount")
     private BigDecimal filledAmount;
     private OrderSide side;
-    private OrderType type;
+    private MatchResultType type;
     @JsonProperty("created_at")
     private String createdAt;
+    private OrderSource source;
 }
