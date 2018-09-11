@@ -92,8 +92,8 @@ public class FcoinApiRestClientImpl implements FcoinApiRestClient {
     }
 
     @Override
-    public Boolean cancel(String orderId) {
-        return executeSync(service.cancel(orderId)).getData();
+    public void cancel(String orderId) {
+         executeSync(service.cancel(orderId)).getData();
     }
 
     @Override

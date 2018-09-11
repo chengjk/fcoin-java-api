@@ -32,7 +32,7 @@ public interface FcoinApiRestClient {
 
     Order get(String orderId);
 
-    Boolean cancel(String orderId);
+    void cancel(String orderId);
 
     Set<MatchResult> matchResult(String orderId);
 }

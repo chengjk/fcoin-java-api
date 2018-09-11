@@ -83,7 +83,9 @@ public class FcoinApiClientImplTest {
     public void balance() {
         Set<Asset> balance = client.balance();
         Asset usdt = balance.stream().filter(f -> f.getCurrency().equalsIgnoreCase("usdt")).findFirst().get();
+        Asset btc = balance.stream().filter(f -> f.getCurrency().equalsIgnoreCase("btc")).findFirst().get();
         assert usdt != null;
+        assert btc != null;
     }
     @Test
     public void place() {
@@ -97,13 +99,12 @@ public class FcoinApiClientImplTest {
     }
     @Test
     public void get() {
-        Order order = client.get("iuW77XTQuxWyiZV3PUHBq-2oBBOVLUQpZw6N4BA0phU=");
+        Order order = client.get("Z-_s9OIRZSXwn_W7IFNRRi2d0b9TnMXcPm_K04m_-eI=");
         assert order != null;
     }
     @Test
     public void cancel() {
-        Boolean result = client.cancel("iuW77XTQuxWyiZV3PUHBq-2oBBOVLUQpZw6N4BA0phU=");
-        assert result != null;
+        client.cancel("Z-_s9OIRZSXwn_W7IFNRRi2d0b9TnMXcPm_K04m_-eI=");
     }
     @Test
     public void matchResult() {
